@@ -1,5 +1,16 @@
 {
+  "name": "vanila-typescript",
+  "version": "1.0.0",
+  "description": "<a name='top'></a>\r | No | Subject |\r | --- | ------------------------------------------------------------------------------------------- |\r | 1. | [What is typescript?](#What-is-typescript?) |\r | 2. | [Why use typescript?](#Why-use-typescript?) |\r | 3. | [How does work typeScript?](#How-does-work-typeScript?) |\r | 4. | [Installing & Configuring typescript & Compiler](#Installing-&-Configuring-typescript-&-Compiler) |\r | 5. | [Number type data](#Number-type-data) |\r | 6. | [String type data](#String-type-data) |\r | 7. | [Boolean type data](#Boolean-type-data) |\r | 8. | [Array type data](#Array-type-data) |\r | 9. | [Object type data](#Object-type-data) |\r | 10. | [Union type data](#Union-type-data) |\r | 11. | [Tuple type data](#Tuple-type-data) |\r | 12. | [Any type data](#Any-type-data) |\r | 13. | [Enum type data](#Enum-type-data) |\r | 14. | [Void type data](#Void-type-data) |\r | 15. | [Never type data](#Void-type-data) |",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "(npx parcel ./index.html) & npx parcel watch ./index.html"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "devDependencies": {
-    "typescript": "^4.9.4"
+    "parcel": "^2.9.3",
+    "prettier": "3.0.3"
   }
 }

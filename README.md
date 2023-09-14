@@ -7,17 +7,24 @@
 | 2. | [Why use typescript?](#Why-use-typescript?) |
 | 3. | [How does work typeScript?](#How-does-work-typeScript?) |
 | 4. | [Installing & Configuring typescript & Compiler](#Installing-&-Configuring-typescript-&-Compiler) |
+| 4. | [Process of run typescript with parcel](#Process-of-run-typescript-with-parcel) |
+| 12. | [Any type data](#Any-type-data) |
+| 12. | [Uknown type data](#unknown-type-data) |
 | 5. | [Number type data](#Number-type-data) |
 | 6. | [String type data](#String-type-data) |
 | 7. | [Boolean type data](#Boolean-type-data) |
 | 8. | [Array type data](#Array-type-data) |
 | 9. | [Object type data](#Object-type-data) |
-| 10. | [Union type data](#Union-type-data) |
+| 10. | [Union type data](#union-type) |
 | 11. | [Tuple type data](#Tuple-type-data) |
-| 12. | [Any type data](#Any-type-data) |
 | 13. | [Enum type data](#Enum-type-data) |
 | 14. | [Void type data](#Void-type-data) |
 | 15. | [Never type data](#Void-type-data) |
+| 15. | [Explicit, implicit and inference](#Explicit-implicit-and-inference) |
+| 15. | [type alias](#type-alias) |
+| 15. | [union type](#union-type) |
+| 15. | [Intersection type](#intersection-type) |
+| 15. | [Index signature type](#Index-signature-type) |
 
 <a name='What-is-typescript?'></a>
 
@@ -61,47 +68,67 @@ Once you are ready to run your code, you can use the TypeScript compiler (tsc) t
 
 <a name='Installing-&-Configuring-typescript-&-Compiler'></a>
 
-> **_Installing & Configuring typescript and Compiler_**
+## Installing & Configuring typescript and Compiler
 
-- Install node js in your PC and check node -v.
-- Install Compiler
+---
+
+- > Install node js.
+- > Install Compiler.
+- > Initialize Typescript compailer (tsc)
 
 ```js
+//Locally install
 npm install typescript --save-dev
-            or
+
+//Globally install
 npm install -g typescript
-```
 
-- The compiler is installed in the node_modules directory and can be run with:
-
-```js
-npx tsc
-```
-
-- Create `tsconfig.json` by
-
-```js
+//Initialize typesicript compailer (`tsconfig.json`)
 tsc --init
 ```
 
-- Create `index.ts` and open with tsc:
+- Create `index.html` and `index.js` file.
+- In `index.html` link `index.js` file
+- Create `index.ts ` file.
+- `index.html` file can not read `index.ts` file. So, every changes need to compile `index.ts` to `index.js` by following commpand:
 
-```js
-tsc index.ts
-//output: index.js
+```
+tsc index.ts --watch
+
 ```
 
-- Run Js file by node and get output:
+- For showing compiling result in terminal run command:
 
-```js
+```
 node index.js
 ```
 
-- use watch mode for automatic re-compile:
+[Go to top:arrow_up: ](#top)
+
+<a name='Process-of-run-typescript-with-parcel'></a>
+
+## Process of run typescript with parcel
+
+- npm init --y
+- npm install parcel --save-dev
+- Create `index.html` file as root.
+- Create `src` and `/src/index.ts` and link in `index.html` head.
+- Install typescript if before not installed.
+- tsc --init
+- From `tsconfig.json` `"noEmitOnError": true,` in uncommited.
+- From package.json remove main because parcel cannot reae main.
+- Write script in package. json as following:
 
 ```js
-tsc index.ts --watch
+ "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "(npx parcel ./index.html) & npx parcel watch ./index.html"
+  },
+  //npx parcel ./index.html - Run development parcel server
+  // npx parcel watch ./index.html - complie ts to js and hot reload parcel server
 ```
+
+- Now For start server run command `npm start`
 
 [Go to top:arrow_up: ](#top)
 
@@ -133,6 +160,77 @@ There are several types of data types in TypeScript, including:
 
 [Go to top:arrow_up: ](#top)
 
+<a name='Any-type-data'></a>
+
+> **_Any data type_**
+
+The any data type in TypeScript is used to represent any value or type. It is a flexible data type that can be used when the type of a variable is not known or when the variable needs to be able to hold different types of values at different times.
+
+An any variable can be declared by using the syntax `"let variableName: any = value"`.
+
+```js
+let dynamicValue: any = "Hello";
+console.log(dynamicValue); // Output: "Hello"
+dynamicValue = 25;
+console.log(dynamicValue); // Output: 25
+```
+
+The any data type can be useful when working with external libraries or APIs that return dynamic data.
+
+```js
+let jsonData: any = JSON.parse('{"name":"John", "age":25}');
+console.log(jsonData.name); // Output: "John"
+console.log(jsonData.age); // Output: 25
+```
+
+You can also use any data type with arrays
+
+```js
+let values: any[] = [1, "Hello", true];
+console.log(values[0]); // Output: 1
+console.log(values[1]); // Output: "Hello"
+console.log(values[2]); // Output: true
+```
+
+It is important to note that when you use the any data type, TypeScript will not check for type compatibility, and you will lose the benefits of type checking. Therefore, it is recommended to use any data type only when it is absolutely necessary and to be careful when using it.
+
+In the above examples, you can see how the any data type is used to represent any value or type, making it a flexible data type that can be used when the type of a variable is not known.
+
+[Go to top:arrow_up: ](#top)
+
+<a name='unknown-type-data'></a>
+
+## Unknown type data
+
+---
+
+- The unknown type in TypeScript is a type-safe counterpart to the any type.
+- It is used to represent a value whose type is unknown or not yet known.
+- Assign any type `unknown` return correct answer but he indicate that this is unknown type.
+- In compile time decision can possible with indicating error by `unknown type` which can not possible by `any` type.
+- It forced developer the developer for type check befor performing the value.
+- So, `unknown` type is safe from `any` type.
+
+```ts
+function multiply(a: unknown) {
+  return a * 2;
+}
+console.log(multiply(4)); //8
+console.log(multiply("string")); //Nan
+
+//Decide by indicating error
+function multiply2(a: unknown) {
+  if (typeof a === "number") {
+    return a * 2;
+  } else {
+    return "Provide valid number";
+  }
+}
+console.log(multiply(4)); //8
+console.log(multiply("string")); //Provide valid number
+```
+
+[Go to top:arrow_up: ](#top)
 <a name='Number-type-data'></a>
 
 > **_Number type data_**
@@ -320,44 +418,6 @@ In the above examples, you can see how the tuple data type is used to store a fi
 
 [Go to top:arrow_up: ](#top)
 
-<a name='Any-type-data'></a>
-
-> **_Any data type_**
-
-The any data type in TypeScript is used to represent any value or type. It is a flexible data type that can be used when the type of a variable is not known or when the variable needs to be able to hold different types of values at different times.
-
-An any variable can be declared by using the syntax `"let variableName: any = value"`.
-
-```js
-let dynamicValue: any = "Hello";
-console.log(dynamicValue); // Output: "Hello"
-dynamicValue = 25;
-console.log(dynamicValue); // Output: 25
-```
-
-The any data type can be useful when working with external libraries or APIs that return dynamic data.
-
-```js
-let jsonData: any = JSON.parse('{"name":"John", "age":25}');
-console.log(jsonData.name); // Output: "John"
-console.log(jsonData.age); // Output: 25
-```
-
-You can also use any data type with arrays
-
-```js
-let values: any[] = [1, "Hello", true];
-console.log(values[0]); // Output: 1
-console.log(values[1]); // Output: "Hello"
-console.log(values[2]); // Output: true
-```
-
-It is important to note that when you use the any data type, TypeScript will not check for type compatibility, and you will lose the benefits of type checking. Therefore, it is recommended to use any data type only when it is absolutely necessary and to be careful when using it.
-
-In the above examples, you can see how the any data type is used to represent any value or type, making it a flexible data type that can be used when the type of a variable is not known.
-
-[Go to top:arrow_up: ](#top)
-
 <a name='Enum-type-data'></a>
 
 > **_Enum type data_**
@@ -443,3 +503,445 @@ function infiniteLoop(): never {
 It's also possible to use never as a type for a variable but it's not
 
 [Go to top:arrow_up: ](#top)
+
+<a name='Explicit-implicit-and-inference'></a>
+
+## Explicit, implicit and inference
+
+---
+
+**Explicit Typing:**
+Explicit typing is when you declare the data type of a variable explicitly using TypeScript annotations.
+
+```ts
+// Explicitly declaring the types
+let explicitNumber: number = 10;
+let explicitString: string = "Hello, TypeScript";
+let explicitArray: number[] = [1, 2, 3];
+let explicitObject: { name: string; age: number } = { name: "John", age: 30 };
+```
+
+In the above code, we explicitly specify the data types for the variables.
+
+**Implicit Typing:**  
+Implicit typing is when TypeScript infers the data type based on the value assigned to a variable.
+
+```ts
+// Implicit typing
+let implicitNumber = 10; // TypeScript infers 'implicitNumber' as type number
+let implicitString = "Hello, TypeScript"; // TypeScript infers 'implicitString' as type string
+let implicitArray = [1, 2, 3]; // TypeScript infers 'implicitArray' as type number[]
+let implicitObject = { name: "John", age: 30 }; // TypeScript infers 'implicitObject' as an object with a specific structure
+```
+
+In the above code, we didn't specify the data types explicitly, but TypeScript inferred them based on the assigned values.
+
+**Type Inference:**
+Type inference occurs when TypeScript automatically infers the data types of variables based on how they are used within the code.
+
+```ts
+// Type inference
+let num = 10; // TypeScript infers 'num' as type number
+let greeting = "Hello, TypeScript"; // TypeScript infers 'greeting' as type string
+
+function add(a: number, b: number) {
+  return a + b; // TypeScript infers the return type as number
+}
+```
+
+In the code above, TypeScript infers the types of variables based on their usage and infers the return type of the add function based on the operation performed.
+
+TypeScript's type inference is powerful and helps catch type-related errors while providing strong type safety.
+
+[Go to top:arrow_up: ](#top)
+
+<a name='type-alias'></a>
+
+## type alias
+
+---
+
+- A type alias allows you to create a custom name for a type, making your code more readable and maintaining flexibility.
+- It's especially useful when you want to create complex or reusable types.
+- To define a type alias, you use the `type` keyword.
+
+```ts
+type Student = {
+  roll: number;
+  name: string;
+  class: string;
+};
+
+const student1: Student = {
+  roll: 1,
+  name: "Anamul",
+  class: "Five",
+};
+
+const student2: Student = {
+  roll: 2,
+  name: "Haque",
+  class: "Five",
+};
+```
+
+[Go to top:arrow_up: ](#top)
+
+<a name='union-type'></a>
+
+## Union type
+
+Union type can have properties of either one or both of the types.
+
+```ts
+type Dog = {
+  name: string;
+  barks: boolean;
+  wags: boolean;
+};
+
+type Cat = {
+  name: string;
+  purrs: boolean;
+};
+
+//Union type declare
+type DogAndCatUnion = Dog | Cat;
+
+//One properties
+let dog: DogAndCatUnion = {
+  name: "Buddy",
+  barks: true,
+  wags: true,
+};
+
+//One properties
+let cat: DogAndCatUnion = {
+  name: "Bella",
+  purrs: true,
+};
+
+//both properties
+let DogAndCat: DogAndCatUnion = {
+  name: "Hybrid",
+  barks: true,
+  wags: true,
+  purrs: true,
+};
+
+//Second example
+type StringOrNumber = string | number;
+
+const printData = (a: StringOrNumber, b: StringOrNumber) => {
+  if (typeof a === "number" && typeof b === "number") {
+    return a + b;
+  } else {
+    return a.toString() + b.toString();
+  }
+};
+
+console.log(printData(4, "books"));
+```
+
+[Go to top:arrow_up: ](#top)
+
+<a name='intersection-type'></a>
+
+## Intersection type
+
+---
+
+- An intersection type allows you to combine multiple types into a single type.
+- You define an intersection type using the & operator.
+- In this type declaration all properties assigned mendatory, otherwise return error.
+
+```typescript
+Copy code
+type Employee = {
+    id: number;
+    name: string;
+};
+
+type Department = {
+    departmentId: number;
+    departmentName: string;
+};
+
+type EmployeeWithDepartment = Employee & Department;
+
+const john: EmployeeWithDepartment = {
+    id: 1,
+    name: "John",
+    departmentId: 101,
+    departmentName: "HR",
+};
+```
+
+In this example, we've defined two types, Employee and Department, representing an employee and a department, respectively. We then create an EmployeeWithDepartment type as an intersection of these two types using the & operator. As a result, the EmployeeWithDepartment type has all the properties from both Employee and Department.
+
+[Go to top:arrow_up: ](#top)
+
+<a name='Index-signature-type'></a>
+
+## Index signature type
+
+---
+
+An index signature in TypeScript is a way to define the shape of an object with keys that are not known at compile time. It is denoted by using the [key: Type] syntax, where key is the name of the index and Type is the type of the value that can be stored at that index.
+
+For example, the following code defines an object with an index signature that allows strings to be stored at any index:
+
+```ts
+type Product = {
+  [key: string]: string;
+};
+```
+
+We can then create an instance of the product and store a string value at any index:
+
+```ts
+const product: Product = {
+  Soap: "Lux",
+  Snow: "Fair & Lovely",
+  Mobile: "Samsung",
+};
+```
+
+**Another example**
+
+- Dynamically key value
+
+```ts
+interface MultiTypeDictionary {
+  [key: string]: number | string;
+}
+
+const myMultiTypeDictionary: MultiTypeDictionary = {
+  one: 1,
+  2: "two",
+  three: "3",
+};
+```
+
+The [key: string]: number | string syntax in the index signature of the MultiTypeDictionary interface means that the key of the object can be any string, and the value can be either a number or a string.
+
+The const myMultiTypeDictionary: MultiTypeDictionary = { "one": 1, 2: "two", "three": "3" } statement creates an instance of the MultiTypeDictionary interface and stores the following values:
+
+The string "one" with the number 1.
+The number 2 with the string "two".
+The string "three" with the string "3".
+
+## Read only array
+
+A read-only array in TypeScript is an array that cannot be modified. This means that you cannot add, remove, or change the elements of the array. You can only read the elements of the array.
+
+There are two ways to create a read-only array in TypeScript:
+
+- Using the `ReadonlyArray<T>` utility type
+- Using the `readonly` modifier with a standard array type
+  Here is an example of creating a read-only array using the `ReadonlyArray<T>` utility type:
+
+```ts
+const numbers: ReadonlyArray<number> = [1, 2, 3, 4, 5];
+```
+
+Here is an example of creating a read-only array using the `readonly` modifier with a standard array type:
+
+```ts
+const numbers: readonly number[] = [1, 2, 3, 4, 5];
+const point: readonly [number, number] = [1, 2]; //Read only tuple
+```
+
+In both cases, the resulting array is a read-only array of numbers.
+
+You can try to modify a read-only array, but TypeScript will throw an error. For example:
+
+```ts
+numbers.push(6); // Error: Cannot add element to read-only array.
+```
+
+Read-only arrays can be useful in situations where you want to prevent accidental modifications to an array. For example, you might want to create a read-only array of data that is used by a function. This will prevent the function from accidentally changing the data
+
+## null & undefined type
+
+- undefined is the default value for uninitialized variables.
+- null is a value that can be assigned to a variable to indicate that the variable does not have a value.
+
+```ts
+let myVariable: null = null;
+
+let myVariable: undefined;
+console.log(myVariable); // Outputs: undefined
+
+//Example
+function getValue(): number | undefined {
+  if (someCondition) {
+    return 42;
+  } else {
+    return undefined;
+  }
+}
+```
+
+## enums types
+
+An enum type in TypeScript is a way to define a set of named constants.  
+There are three types of enums in TypeScript:
+
+**_Numeric enums:_** The members of a numeric enum are numbers, and their values are automatically assigned in increasing order starting from 0.  
+**_String enums:_** The members of a string enum are strings, and their values are the strings themselves.  
+**_Heterogeneous enums:_** The members of a heterogeneous enum can be of different types, such as numbers, strings, or even other enums.
+
+### Numeric enums
+
+```ts
+enum Rank {
+  Admin, // 0
+  Author, // 1
+  Provider, // 2
+}
+
+//Access index
+let roleIndex: Rank = Rank["Admin"];
+console.log(roleIndex); // Outputs: 0
+
+//  access enum values by name
+let roleName: string = Rank[roleIndex];
+console.log(roleName); // Outputs: Admin
+```
+
+### Numeric enums
+
+```ts
+enum Rank {
+  Admin, // 0
+  Author, // 1
+  Provider, // 2
+}
+
+//Access index
+let roleIndex: Rank = Rank["Admin"];
+console.log(roleIndex); // Outputs: 0
+
+//  access enum values by name
+let roleName: string = Rank[roleIndex];
+console.log(roleName); // Outputs: Admin
+```
+
+### Heterogeneous enums
+
+```ts
+enum Status {
+  Active = 1,
+  Inactive = "INACTIVE",
+  Pending = 2,
+}
+
+let status: Status = Status.Inactive;
+console.log(status); // Outputs: "INACTIVE"
+
+let numericValue: number = Status.Active;
+console.log(numericValue); // Outputs: 1
+```
+
+### function declaration
+
+```ts
+//():string means - return string
+function intro(name: string, age: number): string {
+  return `My name is ${name} and age is ${age}`;
+}
+
+intro("Anamul", 34);
+
+const intro2 = (name: string, age: number): string => {
+  return `My name is ${name} and age is ${age}`;
+};
+
+intro2("Haque", 34);
+```
+
+### Default/optional Perameter in function
+
+- TypeScript will throw an error if all parameters are not passed as arguments when calling the function.
+- So the optional parameter must be passed as optional.
+
+```ts
+//Optional parameter assign with - ? sign
+const person = (name: string, age: number, country?: string): string => {
+  if (country) {
+    return `My name is ${name} and age is ${age} and my country is ${country}`;
+  }
+  return `My name is ${name} and age is ${age}`;
+};
+
+console.log(person("Haque", 34));
+console.log(person("Haque", 34, "Banglades"));
+```
+
+### Custom perameter in fuction
+
+```ts
+enum AgeUnit {
+  Month = "month",
+  Year = "year",
+}
+
+type Person = {
+  name: string;
+  age: number;
+  ageUnit: AgeUnit;
+};
+
+function printPerson(person: Person): Person {
+  person.age = person.age * 12;
+  return person;
+}
+
+const person = {
+  name: "Anamul",
+  age: 34,
+  ageUnit: AgeUnit.Month,
+};
+
+console.log(printPerson(person));
+
+//Output : {name: 'Anamul', age: 408, ageUnit: 'month'}
+```
+
+### Function call signature
+
+- A function call signature in TypeScript is a way to describe the types of the parameters and the return value of a function.
+- It is used to ensure that the function is called with the correct arguments and that the return value is of the correct type.
+
+- The function call signature is written after the function name, and it is enclosed in parentheses.
+- The parameters are listed in the parentheses, and their types are specified after the colon.
+- The return type is specified after the arrow (=>).
+
+For example, the following function call signature defines a function that takes two numbers as input and returns their sum:
+
+```ts
+function sum(x: number, y: number): number {
+  return x + y;
+}
+```
+
+### Define function in type allias
+
+```ts
+type Person = {
+  name: string;
+  age: number;
+  ageUnit: AgeUnit;
+  greet: (greeting: string) => string;
+};
+
+const person: Person = {
+  name: "Anamul",
+  age: 34,
+  ageUnit: AgeUnit.Month,
+  greet: (greeting) => `${greeting} Mr. ${person.name}`,
+};
+
+console.log(person.greet("welcome")); //Output : Welcome Mr Anamul
+```
